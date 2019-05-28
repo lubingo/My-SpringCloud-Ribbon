@@ -22,7 +22,7 @@ public class RibbonService {
     private static final Logger logger = LoggerFactory.getLogger(RibbonService.class);
 
 
-    @HystrixCommand(fallbackMethod = "fallBackTest")
+    @HystrixCommand(fallbackMethod = "fallBackTest" )
     public String ribbon(final int a , final int b){
 
         MultiValueMap map = new LinkedMultiValueMap();
