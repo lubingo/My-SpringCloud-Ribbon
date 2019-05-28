@@ -1,5 +1,7 @@
-package com.cloud.springcloud;
+package com.cloud.springcloud.hystrix;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.util.LinkedMultiValueMap;
@@ -14,20 +16,16 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping(value = "/ribbon")
 public class RibbonController {
 
+    private static  final Logger logger = LoggerFactory.getLogger(RibbonController.class);
+
+
 
     @Autowired
-    private RestTemplate restTemplate ;
+    private RibbonService ribbonService ;
 
-    @Autowired
-    private LoadBalancerClient loadBalancerClient ;
-
-    @RequestMapping(value = "/test" ,method = {RequestMethod.POST})
+    @RequestMapping(value = "/test" ,method = {RequestMethod.POST,RequestMethod.GET})
     public String test(@RequestParam int  a   , @RequestParam int b){
-        MultiValueMap map = new LinkedMultiValueMap();
-        map.add("a",a);
-        map.add("b",b) ;
-        this.loadBalancerClient.choose("My-SpringCloud-Service-B") ;// choose 策略
-        return this.restTemplate.postForObject("http://My-SpringCloud-Service-B/ServiceB/test/function",map,String.class) ;
+        return  this.ribbonService.ribbon(a,b);
     }
 
 }
